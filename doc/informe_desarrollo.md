@@ -17,10 +17,11 @@
 6. [Fase 6 — Resolución de Errores de Presentación](#fase-6--resolución-de-errores-de-presentación)
 7. [Fase 7 — Resolución de Error en Runtime](#fase-7--resolución-de-error-en-runtime)
 8. [Fase 8 — Implementación de TODOs (Formularios e Interacción)](#fase-8--implementación-de-todos-formularios-e-interacción)
-9. [Resumen de Errores Resueltos](#resumen-de-errores-resueltos)
-10. [Estado Actual del Proyecto](#estado-actual-del-proyecto)
-11. [Estructura de Archivos](#estructura-de-archivos)
-12. [Próximos Pasos](#próximos-pasos)
+9. [Fase 9 — Resolución de FormatException en Onboarding](#fase-9--resolución-de-formatexception-en-onboarding)
+10. [Resumen de Errores Resueltos](#resumen-de-errores-resueltos)
+11. [Estado Actual del Proyecto](#estado-actual-del-proyecto)
+12. [Estructura de Archivos](#estructura-de-archivos)
+13. [Próximos Pasos](#próximos-pasos)
 
 ---
 
@@ -369,6 +370,73 @@ Reemplazar los 5 comentarios `TODO` que `flutter analyze` reportaba como warning
 
 ---
 
+## Fase 9 — Resolución de FormatException en Onboarding
+
+### Error 6: `FormatException: Invalid number` al completar el onboarding
+
+**Descripción:** Al llegar a la última página del onboarding (Presión Arterial Inicial) y pulsar "Comenzar", se producía una excepción `FormatException: Invalid number (at character 1)` en `_submitForm()` línea 59.
+
+**Manifiesto del error:**
+```
+══╡ EXCEPTION CAUGHT BY GESTURE ╞═══════════════════════════════════
+The following FormatException was thrown while handling a gesture:
+Invalid number (at character 1)
+^
+
+#0  int._handleFormatError (dart:core-patch/integers_patch.dart:150:5)
+#1  int.parse (dart:core-patch/integers_patch.dart:71:14)
+#2  _OnboardingScreenState._submitForm
+    (package:htapp/presentation/screens/onboarding_screen.dart:59:18)
+```
+
+**Causa raíz:** El `Form` global envolvía todo el `PageView`, pero `PageView` **descarta (dispose) las páginas fuera de pantalla** para optimizar memoria. Cuando el usuario llegaba a la página 4 y pulsaba "Comenzar":
+
+1. `_formKey.currentState?.validate()` solo validaba los campos **visibles** (página 4: sistólica/diastólica)
+2. Los `TextEditingController` de páginas anteriores (edad, peso, altura) conservaban su texto
+3. **Pero** si el usuario no había ingresado datos en esas páginas, los controllers estaban vacíos (`""`)
+4. `int.parse("")` lanzaba `FormatException`
+
+El problema fundamental: **un solo `Form` no puede validar campos de múltiples páginas de un `PageView`**, porque los widgets de páginas no visibles no existen en el árbol.
+
+**Corrección aplicada (3 cambios):**
+
+1. **Form individual por página** — Cada página del `PageView` tiene su propio `Form` con su `GlobalKey<FormState>` independiente:
+   ```dart
+   final _formKeys = List.generate(4, (_) => GlobalKey<FormState>());
+
+   Widget _buildPersonalDataPage() {
+     return Form(
+       key: _formKeys[0],  // FormKey exclusiva para esta página
+       child: SingleChildScrollView(...),
+     );
+   }
+   ```
+
+2. **Validación antes de avanzar** — `_nextPage()` valida la página actual e impide avanzar si hay campos vacíos:
+   ```dart
+   void _nextPage() {
+     if (!(_formKeys[_currentPage].currentState?.validate() ?? false)) return;
+     // ... avanzar o submit
+   }
+   ```
+
+3. **Parseo seguro con `tryParse`** — `_submitForm()` usa `tryParse` como guard adicional en lugar de `parse` directo:
+   ```dart
+   final age = int.tryParse(_ageController.text);
+   final weight = double.tryParse(_weightController.text);
+   // ...
+   if (age == null || weight == null || ...) {
+     ScaffoldMessenger.of(context).showSnackBar(
+       const SnackBar(content: Text('Revisa que todos los valores numéricos sean válidos')),
+     );
+     return;
+   }
+   ```
+
+**Resultado:** El onboarding valida cada paso antes de permitir avanzar. Si un campo está vacío o tiene valor inválido, el usuario no puede pasar a la siguiente página. El `FormatException` ya no se produce.
+
+---
+
 ## Resumen de Errores Resueltos
 
 | # | Error | Archivo | Tipo | Causa | Solución |
@@ -378,6 +446,7 @@ Reemplazar los 5 comentarios `TODO` que `flutter analyze` reportaba como warning
 | 3 | `CardTheme` constructor | `app_theme.dart` | Compilación | Flutter 3.38+ cambió API | Usar `CardThemeData` |
 | 4 | `RadioListTile` deprecated | `onboarding_screen.dart` | Deprecation | Flutter 3.32+ deprecó `groupValue`/`onChanged` | Usar wrapper `RadioGroup<T>` |
 | 5 | Null check en ruta inicial | `app_router.dart` / `main.dart` | Runtime | Flutter divide `initialRoute` por `/` | Hacer disclaimer la ruta raíz `/` |
+| 6 | `FormatException` en onboarding | `onboarding_screen.dart` | Runtime | `PageView` descarta páginas; `Form` global no valida campos inexistentes; `int.parse("")` falla | Form individual por página + validación por paso + `tryParse` |
 
 ---
 
@@ -492,4 +561,4 @@ lib/
 
 ---
 
-*Informe generado el 7 de febrero de 2026.*
+*Informe actualizado el 7 de febrero de 2026.*
