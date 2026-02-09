@@ -17,7 +17,9 @@ class EducationContentModel extends EducationContent {
     return EducationContentModel(
       id: json['id'].toString(),
       title: json['title'] ?? '',
-      summary: content.length > 100 ? '${content.substring(0, 100)}...' : content,
+      summary: content.length > 100
+          ? '${content.substring(0, 100)}...'
+          : content,
       body: content,
       category: json['topic'] ?? '',
       orderIndex: json['order'] ?? 0,

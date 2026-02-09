@@ -30,13 +30,13 @@ class MedicationModel {
       instructions: json['instructions'],
       alarms: json['alarms'] != null
           ? (json['alarms'] as List)
-              .map((a) => MedicationAlarmModel.fromJson(a))
-              .toList()
+                .map((a) => MedicationAlarmModel.fromJson(a))
+                .toList()
           : [],
       logs: json['logs'] != null
           ? (json['logs'] as List)
-              .map((l) => MedicationLogModel.fromJson(l))
-              .toList()
+                .map((l) => MedicationLogModel.fromJson(l))
+                .toList()
           : [],
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
@@ -75,8 +75,13 @@ class MedicationModel {
 
   static List<int> _parseDaysOfWeek(String daysStr) {
     final dayMap = {
-      'lun': 1, 'mar': 2, 'mie': 3, 'jue': 4,
-      'vie': 5, 'sab': 6, 'dom': 7,
+      'lun': 1,
+      'mar': 2,
+      'mie': 3,
+      'jue': 4,
+      'vie': 5,
+      'sab': 6,
+      'dom': 7,
     };
     return daysStr
         .split(',')
@@ -145,9 +150,6 @@ class MedicationLogModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'taken_at': takenAt.toIso8601String(),
-      'status': status,
-    };
+    return {'taken_at': takenAt.toIso8601String(), 'status': status};
   }
 }

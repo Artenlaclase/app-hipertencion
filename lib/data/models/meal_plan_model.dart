@@ -37,7 +37,8 @@ class MealPlanModel extends MealPlan {
 
   Map<String, dynamic> toJson() {
     return {
-      'week_start': '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}',
+      'week_start':
+          '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}',
       'notes': description,
     };
   }
