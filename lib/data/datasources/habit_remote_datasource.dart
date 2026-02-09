@@ -30,7 +30,8 @@ class HabitRemoteDataSourceImpl implements HabitRemoteDataSource {
   @override
   Future<HabitModel> getHabit(String id) async {
     final response = await apiClient.get('${ApiConstants.habits}/$id');
-    final habitData = response is Map<String, dynamic> && response.containsKey('data')
+    final habitData =
+        response is Map<String, dynamic> && response.containsKey('data')
         ? response['data']
         : response;
     return HabitModel.fromJson(habitData);
@@ -48,7 +49,8 @@ class HabitRemoteDataSourceImpl implements HabitRemoteDataSource {
   @override
   Future<HabitLogModel> addHabitLog(Map<String, dynamic> data) async {
     final response = await apiClient.post(ApiConstants.habitLogs, body: data);
-    final logData = response is Map<String, dynamic> && response.containsKey('data')
+    final logData =
+        response is Map<String, dynamic> && response.containsKey('data')
         ? response['data']
         : response;
     return HabitLogModel.fromJson(logData);
@@ -67,7 +69,9 @@ class HabitRemoteDataSourceImpl implements HabitRemoteDataSource {
 
   @override
   Future<Map<String, dynamic>> getHabitStreak(String habitId) async {
-    final response = await apiClient.get('${ApiConstants.habitStreaks}/$habitId');
+    final response = await apiClient.get(
+      '${ApiConstants.habitStreaks}/$habitId',
+    );
     return response is Map<String, dynamic> ? response : {};
   }
 }

@@ -10,7 +10,8 @@ abstract class BloodPressureRemoteDataSource {
   Future<Map<String, dynamic>> getStatistics({String? period});
 }
 
-class BloodPressureRemoteDataSourceImpl implements BloodPressureRemoteDataSource {
+class BloodPressureRemoteDataSourceImpl
+    implements BloodPressureRemoteDataSource {
   final ApiClient apiClient;
 
   BloodPressureRemoteDataSourceImpl({required this.apiClient});
@@ -26,8 +27,12 @@ class BloodPressureRemoteDataSourceImpl implements BloodPressureRemoteDataSource
 
   @override
   Future<BloodPressureModel> addRecord(Map<String, dynamic> data) async {
-    final response = await apiClient.post(ApiConstants.bloodPressure, body: data);
-    final recordData = response is Map<String, dynamic> && response.containsKey('data')
+    final response = await apiClient.post(
+      ApiConstants.bloodPressure,
+      body: data,
+    );
+    final recordData =
+        response is Map<String, dynamic> && response.containsKey('data')
         ? response['data']
         : response;
     return BloodPressureModel.fromJson(recordData);
@@ -36,7 +41,8 @@ class BloodPressureRemoteDataSourceImpl implements BloodPressureRemoteDataSource
   @override
   Future<BloodPressureModel> getRecord(String id) async {
     final response = await apiClient.get('${ApiConstants.bloodPressure}/$id');
-    final recordData = response is Map<String, dynamic> && response.containsKey('data')
+    final recordData =
+        response is Map<String, dynamic> && response.containsKey('data')
         ? response['data']
         : response;
     return BloodPressureModel.fromJson(recordData);

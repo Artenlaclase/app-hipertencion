@@ -61,9 +61,11 @@ class BloodPressureRepositoryImpl implements BloodPressureRepository {
     try {
       final allRecords = await remoteDataSource.getRecords();
       final filtered = allRecords
-          .where((r) =>
-              r.recordedAt.isAfter(start.subtract(const Duration(days: 1))) &&
-              r.recordedAt.isBefore(end.add(const Duration(days: 1))))
+          .where(
+            (r) =>
+                r.recordedAt.isAfter(start.subtract(const Duration(days: 1))) &&
+                r.recordedAt.isBefore(end.add(const Duration(days: 1))),
+          )
           .toList();
       return Right(filtered);
     } on UnauthorizedException {

@@ -23,7 +23,10 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
   NutritionRemoteDataSourceImpl({required this.apiClient});
 
   @override
-  Future<List<FoodModel>> getFoods({String? category, String? sodiumLevel}) async {
+  Future<List<FoodModel>> getFoods({
+    String? category,
+    String? sodiumLevel,
+  }) async {
     final queryParams = <String, String>{};
     if (category != null) queryParams['category'] = category;
     if (sodiumLevel != null) queryParams['sodium_level'] = sodiumLevel;
@@ -40,7 +43,8 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
   @override
   Future<FoodModel> getFood(String id) async {
     final response = await apiClient.get('${ApiConstants.foods}/$id');
-    final foodData = response is Map<String, dynamic> && response.containsKey('data')
+    final foodData =
+        response is Map<String, dynamic> && response.containsKey('data')
         ? response['data']
         : response;
     return FoodModel.fromJson(foodData);
@@ -58,7 +62,8 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
   @override
   Future<FoodRecordModel> addFoodLog(Map<String, dynamic> data) async {
     final response = await apiClient.post(ApiConstants.foodLogs, body: data);
-    final logData = response is Map<String, dynamic> && response.containsKey('data')
+    final logData =
+        response is Map<String, dynamic> && response.containsKey('data')
         ? response['data']
         : response;
     return FoodRecordModel.fromJson(logData);
@@ -81,7 +86,8 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
   @override
   Future<MealPlanModel> createMealPlan(Map<String, dynamic> data) async {
     final response = await apiClient.post(ApiConstants.mealPlans, body: data);
-    final planData = response is Map<String, dynamic> && response.containsKey('data')
+    final planData =
+        response is Map<String, dynamic> && response.containsKey('data')
         ? response['data']
         : response;
     return MealPlanModel.fromJson(planData);
@@ -90,16 +96,24 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
   @override
   Future<MealPlanModel> getMealPlan(String id) async {
     final response = await apiClient.get('${ApiConstants.mealPlans}/$id');
-    final planData = response is Map<String, dynamic> && response.containsKey('data')
+    final planData =
+        response is Map<String, dynamic> && response.containsKey('data')
         ? response['data']
         : response;
     return MealPlanModel.fromJson(planData);
   }
 
   @override
-  Future<MealPlanModel> updateMealPlan(String id, Map<String, dynamic> data) async {
-    final response = await apiClient.put('${ApiConstants.mealPlans}/$id', body: data);
-    final planData = response is Map<String, dynamic> && response.containsKey('data')
+  Future<MealPlanModel> updateMealPlan(
+    String id,
+    Map<String, dynamic> data,
+  ) async {
+    final response = await apiClient.put(
+      '${ApiConstants.mealPlans}/$id',
+      body: data,
+    );
+    final planData =
+        response is Map<String, dynamic> && response.containsKey('data')
         ? response['data']
         : response;
     return MealPlanModel.fromJson(planData);

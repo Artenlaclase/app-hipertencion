@@ -39,13 +39,9 @@ class AppRouter {
           ),
         );
       case AppRoutes.login:
-        return MaterialPageRoute(
-          builder: (_) => const LoginScreen(),
-        );
+        return MaterialPageRoute(builder: (_) => const LoginScreen());
       case AppRoutes.register:
-        return MaterialPageRoute(
-          builder: (_) => const RegisterScreen(),
-        );
+        return MaterialPageRoute(builder: (_) => const RegisterScreen());
       case AppRoutes.onboarding:
         return MaterialPageRoute(
           builder: (context) => OnboardingScreen(

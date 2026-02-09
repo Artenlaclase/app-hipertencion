@@ -20,7 +20,9 @@ class UserRepositoryImpl implements UserRepository {
   });
 
   @override
-  Future<Either<Failure, UserProfile>> createProfile(UserProfile profile) async {
+  Future<Either<Failure, UserProfile>> createProfile(
+    UserProfile profile,
+  ) async {
     if (!await networkInfo.isConnected) {
       return const Left(NetworkFailure());
     }
@@ -70,7 +72,9 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, UserProfile>> updateProfile(UserProfile profile) async {
+  Future<Either<Failure, UserProfile>> updateProfile(
+    UserProfile profile,
+  ) async {
     if (!await networkInfo.isConnected) {
       return const Left(NetworkFailure());
     }
@@ -135,7 +139,7 @@ class UserRepositoryImpl implements UserRepository {
         initialDiastolic: profile.initialDiastolic,
         createdAt: DateTime.now(),
       );
-      final response = await remoteDataSource.register(
+      await remoteDataSource.register(
         userModel.toRegisterJson(email, password),
       );
       // Get user data after registration

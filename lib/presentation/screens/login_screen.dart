@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import '../../core/network/api_client.dart';
 import '../../core/services/auth_token_service.dart';
+import '../../data/datasources/auth_remote_datasource.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -38,8 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final userRepo = sl.get<dynamic>(instanceName: null);
 
       // For now, use the data source directly
-      final authDataSource =
-          sl<dynamic>();
+      final authDataSource = sl<dynamic>();
       // Will be connected via BLoC later
 
       Navigator.of(context).pushReplacementNamed('/home');

@@ -53,7 +53,9 @@ class NutritionRepositoryImpl implements NutritionRepository {
   }
 
   @override
-  Future<Either<Failure, List<Food>>> getFoodsByCategory(String category) async {
+  Future<Either<Failure, List<Food>>> getFoodsByCategory(
+    String category,
+  ) async {
     if (!await networkInfo.isConnected) {
       return const Left(NetworkFailure());
     }
@@ -96,10 +98,12 @@ class NutritionRepositoryImpl implements NutritionRepository {
     try {
       final logs = await remoteDataSource.getFoodLogs();
       final filtered = logs
-          .where((l) =>
-              l.recordedAt.year == date.year &&
-              l.recordedAt.month == date.month &&
-              l.recordedAt.day == date.day)
+          .where(
+            (l) =>
+                l.recordedAt.year == date.year &&
+                l.recordedAt.month == date.month &&
+                l.recordedAt.day == date.day,
+          )
           .toList();
       return Right(filtered);
     } on UnauthorizedException {
@@ -125,7 +129,10 @@ class NutritionRepositoryImpl implements NutritionRepository {
   }
 
   @override
-  Future<Either<Failure, MealPlan>> getMealPlan(String userId, DateTime date) async {
+  Future<Either<Failure, MealPlan>> getMealPlan(
+    String userId,
+    DateTime date,
+  ) async {
     if (!await networkInfo.isConnected) {
       return const Left(NetworkFailure());
     }

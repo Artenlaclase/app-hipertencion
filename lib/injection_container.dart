@@ -128,9 +128,15 @@ Future<void> init() async {
   sl.registerLazySingleton(() => CreateUserProfile(sl<UserRepository>()));
   sl.registerLazySingleton(() => GetUserProfile(sl<UserRepository>()));
   sl.registerLazySingleton(() => AcceptDisclaimer(sl<UserRepository>()));
-  sl.registerLazySingleton(() => AddBloodPressureRecord(sl<BloodPressureRepository>()));
-  sl.registerLazySingleton(() => GetBloodPressureHistory(sl<BloodPressureRepository>()));
+  sl.registerLazySingleton(
+    () => AddBloodPressureRecord(sl<BloodPressureRepository>()),
+  );
+  sl.registerLazySingleton(
+    () => GetBloodPressureHistory(sl<BloodPressureRepository>()),
+  );
   sl.registerLazySingleton(() => AddFoodRecord(sl<NutritionRepository>()));
   sl.registerLazySingleton(() => GetMealPlan(sl<NutritionRepository>()));
-  sl.registerLazySingleton(() => GetEducationContents(sl<EducationRepository>()));
+  sl.registerLazySingleton(
+    () => GetEducationContents(sl<EducationRepository>()),
+  );
 }

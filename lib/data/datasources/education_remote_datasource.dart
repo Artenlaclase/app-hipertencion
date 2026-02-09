@@ -3,7 +3,10 @@ import '../../core/network/api_client.dart';
 import '../models/education_content_model.dart';
 
 abstract class EducationRemoteDataSource {
-  Future<List<EducationContentModel>> getContents({String? topic, String? level});
+  Future<List<EducationContentModel>> getContents({
+    String? topic,
+    String? level,
+  });
   Future<EducationContentModel> getContent(String id);
 }
 
@@ -32,8 +35,11 @@ class EducationRemoteDataSourceImpl implements EducationRemoteDataSource {
 
   @override
   Future<EducationContentModel> getContent(String id) async {
-    final response = await apiClient.get('${ApiConstants.educationalContents}/$id');
-    final contentData = response is Map<String, dynamic> && response.containsKey('data')
+    final response = await apiClient.get(
+      '${ApiConstants.educationalContents}/$id',
+    );
+    final contentData =
+        response is Map<String, dynamic> && response.containsKey('data')
         ? response['data']
         : response;
     return EducationContentModel.fromJson(contentData);

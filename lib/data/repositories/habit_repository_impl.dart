@@ -67,7 +67,10 @@ class HabitRepositoryImpl implements HabitRepository {
   }
 
   @override
-  Future<Either<Failure, Habit>> completeHabit(String habitId, DateTime date) async {
+  Future<Either<Failure, Habit>> completeHabit(
+    String habitId,
+    DateTime date,
+  ) async {
     if (!await networkInfo.isConnected) {
       return const Left(NetworkFailure());
     }
