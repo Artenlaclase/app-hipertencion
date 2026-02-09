@@ -3,9 +3,9 @@ import 'core/routes/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'injection_container.dart' as di;
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  di.init();
+  await di.init();
   runApp(const MyApp());
 }
 
@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'HTApp',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
+      initialRoute: AppRoutes.initialRoute,
       onGenerateRoute: AppRouter.generateRoute,
     );
   }

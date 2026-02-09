@@ -64,7 +64,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<UserModel> getMe() async {
     final response = await apiClient.get(ApiConstants.me);
-    final userData = response is Map<String, dynamic> && response.containsKey('data')
+    final userData =
+        response is Map<String, dynamic> && response.containsKey('data')
         ? response['data']
         : response;
     return UserModel.fromJson(userData);
@@ -73,7 +74,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<UserModel> updateProfile(Map<String, dynamic> data) async {
     final response = await apiClient.put(ApiConstants.profile, body: data);
-    final userData = response is Map<String, dynamic> && response.containsKey('data')
+    final userData =
+        response is Map<String, dynamic> && response.containsKey('data')
         ? response['data']
         : response;
     return UserModel.fromJson(userData);
