@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import '../../core/network/api_client.dart';
 import '../../core/services/auth_token_service.dart';
 import '../../data/datasources/auth_remote_datasource.dart';
 
@@ -36,14 +35,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final sl = GetIt.instance;
-      // Use the UserRepositoryImpl directly for login
-      final userRepo = sl.get<dynamic>(instanceName: null);
+      final authDataSource = sl<AuthRemoteDataSource>();
+      final authTokenService = sl<AuthTokenService>();
 
-      // For now, use the data source directly
-      final authDataSource = sl<dynamic>();
-      // Will be connected via BLoC later
+      await authDataSource.login(
+        _emailController.text.trim(),
+        _passwordController.text,
+      );
 
-      Navigator.of(context).pushReplacementNamed('/home');
+      final user = await authDataSource.getMe();
+      await authTokenService.saveUserId(user.id);
+      await authTokenService.setOnboardingCompleted(true);
+
+      if (mounted) {
+        Navigator.of(context).pushReplacementNamed('/home');
+      }
     } catch (e) {
       setState(() {
         _errorMessage = 'Error al iniciar sesión. Verifique sus credenciales.';
