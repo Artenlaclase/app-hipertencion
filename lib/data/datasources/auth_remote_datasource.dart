@@ -12,9 +12,29 @@ abstract class AuthRemoteDataSource {
   Future<UserModel> updateProfile(Map<String, dynamic> data);
   Future<void> onboarding(Map<String, dynamic> data);
   Future<void> forgotPassword(String email);
+  Future<void> resetPassword(String token, String newPassword);
+  Future<bool> validateResetToken(String token);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
+  @override
+  Future<bool> validateResetToken(String token) async {
+    final response = await apiClient.post(
+      '/validate-reset-token',
+      body: {'token': token},
+    );
+    // Suponiendo que la API responde con { valid: true/false }
+    return response['valid'] == true;
+  }
+
+  @override
+  Future<void> resetPassword(String token, String newPassword) async {
+    await apiClient.post(
+      '/reset-password',
+      body: {'token': token, 'password': newPassword},
+    );
+  }
+
   @override
   Future<void> forgotPassword(String email) async {
     await apiClient.post('/forgot-password', body: {'email': email});
