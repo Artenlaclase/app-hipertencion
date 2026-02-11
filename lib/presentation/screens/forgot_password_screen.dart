@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import '../../data/datasources/auth_remote_datasource.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -20,8 +22,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       _message = null;
     });
     try {
-      // TODO: Llama a AuthRemoteDataSource.forgotPassword(_emailController.text)
-      await Future.delayed(const Duration(seconds: 1));
+      final sl = GetIt.instance;
+      final authDataSource = sl<AuthRemoteDataSource>();
+      await authDataSource.forgotPassword(_emailController.text.trim());
       setState(() {
         _message =
             'Si el correo está registrado, se envió un enlace de recuperación.';

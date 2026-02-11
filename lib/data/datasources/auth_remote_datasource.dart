@@ -11,9 +11,15 @@ abstract class AuthRemoteDataSource {
   Future<UserModel> getMe();
   Future<UserModel> updateProfile(Map<String, dynamic> data);
   Future<void> onboarding(Map<String, dynamic> data);
+  Future<void> forgotPassword(String email);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
+  @override
+  Future<void> forgotPassword(String email) async {
+    await apiClient.post('/forgot-password', body: {'email': email});
+  }
+
   final ApiClient apiClient;
   final AuthTokenService authTokenService;
 
