@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static const Color primaryColor = Color(0xFF1A73E8);
-  static const Color secondaryColor = Color(0xFF34A853);
-  static const Color errorColor = Color(0xFFEA4335);
-  static const Color warningColor = Color(0xFFFBBC04);
-  static const Color backgroundColor = Color(0xFFF8F9FA);
+  // Paleta Brand DNA
+  static const Color primaryColor = Color(0xFF2C7699); // Azul Sereno
+  static const Color secondaryColor = Color(0xFF5CB85C); // Verde Esperanza
+  static const Color errorColor = Color(0xFFD9534F); // Coral Suave
+  static const Color warningColor = Color(0xFFFBBC04); // Amarillo semáforo
+  static const Color backgroundColor = Color(0xFFF9F9F9); // Blanco Hueso
   static const Color surfaceColor = Colors.white;
   static const Color textPrimary = Color(0xFF202124);
   static const Color textSecondary = Color(0xFF5F6368);
 
   // Colores semáforo PA
-  static const Color pressureNormal = Color(0xFF34A853);
-  static const Color pressureElevated = Color(0xFFFBBC04);
-  static const Color pressureHigh = Color(0xFFEA4335);
-  static const Color pressureCrisis = Color(0xFF9C27B0);
+  static const Color pressureNormal = Color(0xFF5CB85C); // Verde Esperanza
+  static const Color pressureElevated = Color(0xFFFBBC04); // Amarillo
+  static const Color pressureHigh = Color(0xFFD9534F); // Coral Suave
+  static const Color pressureCrisis = Color(0xFF9C27B0); // Morado (crisis)
 
   static ThemeData get lightTheme {
     return ThemeData(
@@ -74,22 +75,33 @@ class AppTheme {
       ),
       textTheme: const TextTheme(
         headlineLarge: TextStyle(
+          fontFamily: 'Nunito', // O 'Poppins' si la agregas
           fontSize: 28,
           fontWeight: FontWeight.bold,
           color: textPrimary,
         ),
         headlineMedium: TextStyle(
+          fontFamily: 'Nunito',
           fontSize: 22,
           fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
         titleLarge: TextStyle(
+          fontFamily: 'Nunito',
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
-        bodyLarge: TextStyle(fontSize: 16, color: textPrimary),
-        bodyMedium: TextStyle(fontSize: 14, color: textSecondary),
+        bodyLarge: TextStyle(
+          fontFamily: 'Nunito',
+          fontSize: 16,
+          color: textPrimary,
+        ),
+        bodyMedium: TextStyle(
+          fontFamily: 'Nunito',
+          fontSize: 14,
+          color: textSecondary,
+        ),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         selectedItemColor: primaryColor,
