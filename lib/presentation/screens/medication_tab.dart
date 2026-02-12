@@ -40,8 +40,15 @@ class _MedicationTabState extends State<MedicationTab> {
 
     result.fold(
       (failure) {
+        // Detectar error de autenticación
+        final isAuthError =
+            failure.message.toLowerCase().contains('auth') ||
+            failure.message.toLowerCase().contains('token') ||
+            failure.message.toLowerCase().contains('sesión');
         setState(() {
-          _errorMessage = failure.message;
+          _errorMessage = isAuthError
+              ? 'Error de autenticación. Por favor, vuelve a iniciar sesión.'
+              : failure.message;
           _isLoading = false;
         });
       },
@@ -279,13 +286,20 @@ class _MedicationTabState extends State<MedicationTab> {
   }
 
   Widget _buildErrorState(BuildContext context) {
+    final isAuthError = (_errorMessage ?? '').toLowerCase().contains(
+      'autenticación',
+    );
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.cloud_off, size: 64, color: Colors.grey.shade400),
+            Icon(
+              isAuthError ? Icons.lock_outline : Icons.cloud_off,
+              size: 64,
+              color: Colors.grey.shade400,
+            ),
             const SizedBox(height: 16),
             Text(
               _errorMessage ?? 'Error al cargar medicamentos',
@@ -293,11 +307,20 @@ class _MedicationTabState extends State<MedicationTab> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: _loadMedications,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Reintentar'),
-            ),
+            if (isAuthError)
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.of(context).pushReplacementNamed('/login');
+                },
+                icon: const Icon(Icons.login),
+                label: const Text('Iniciar sesión'),
+              )
+            else
+              ElevatedButton.icon(
+                onPressed: _loadMedications,
+                icon: const Icon(Icons.refresh),
+                label: const Text('Reintentar'),
+              ),
           ],
         ),
       ),

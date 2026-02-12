@@ -119,23 +119,23 @@ class BloodPressureTab extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildReferenceItem(String label, String range, Color color) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          Container(
-            width: 16,
-            height: 16,
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-          ),
-          const SizedBox(width: 12),
-          Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
-          const Spacer(),
-          Text(range, style: const TextStyle(color: AppTheme.textSecondary)),
-        ],
-      ),
-    );
-  }
+Widget _buildReferenceItem(String label, String range, Color color) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Row(
+      children: [
+        Container(
+          width: 16,
+          height: 16,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
+        const SizedBox(width: 8),
+        Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
+        const SizedBox(width: 8),
+        Text(range, style: const TextStyle(color: Colors.grey)),
+      ],
+    ),
+  );
 }

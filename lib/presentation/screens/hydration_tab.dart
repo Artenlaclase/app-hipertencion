@@ -6,7 +6,7 @@ import '../../domain/entities/hydration.dart';
 import '../../domain/usecases/get_hydration_records.dart';
 import '../../domain/usecases/add_hydration_record.dart';
 import '../../domain/usecases/delete_hydration_record.dart';
-import '../widgets/add_hydration_dialog.dart';
+// import '../widgets/add_hydration_dialog.dart';
 
 class HydrationTab extends StatefulWidget {
   const HydrationTab({super.key});
@@ -16,9 +16,48 @@ class HydrationTab extends StatefulWidget {
 }
 
 class _HydrationTabState extends State<HydrationTab> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Hidratación')),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildProgressCard(context),
+            const SizedBox(height: 24),
+            _buildQuickAddSection(context),
+            const SizedBox(height: 24),
+            _buildTypeSummary(context),
+            const SizedBox(height: 24),
+            ..._todayRecords.asMap().entries.map(
+              (entry) => _buildRecordTile(context, entry.value, entry.key),
+            ),
+            if (_errorMessage != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Text(
+                  _errorMessage!,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   final List<HydrationRecord> _records = [];
   final int _dailyGoalMl = 2000;
-  bool _isLoading = false;
+  String? _errorMessage;
+  Map<LiquidType, int> get _todaySummaryByType {
+    final summary = <LiquidType, int>{};
+    for (final r in _todayRecords) {
+      summary[r.liquidType] = (summary[r.liquidType] ?? 0) + r.amountMl;
+    }
+    return summary;
+  }
 
   @override
   void initState() {
@@ -27,20 +66,31 @@ class _HydrationTabState extends State<HydrationTab> {
   }
 
   Future<void> _loadRecords() async {
-    setState(() => _isLoading = true);
+    setState(() {});
 
     final getRecords = GetIt.instance<GetHydrationRecords>();
     final result = await getRecords(DateTime.now());
 
     result.fold(
       (failure) {
-        setState(() => _isLoading = false);
+        final isAuthError =
+            failure.message.toLowerCase().contains('auth') ||
+            failure.message.toLowerCase().contains('token') ||
+            failure.message.toLowerCase().contains('sesión');
+        setState(() {
+          if (isAuthError) {
+            _errorMessage =
+                'Error de autenticación. Por favor, vuelve a iniciar sesión.';
+          } else {
+            _errorMessage = failure.message;
+          }
+        });
       },
       (records) {
         setState(() {
           _records.clear();
           _records.addAll(records);
-          _isLoading = false;
+          _errorMessage = null;
         });
       },
     );
@@ -113,98 +163,6 @@ class _HydrationTabState extends State<HydrationTab> {
     final today = _records.where((r) => _isToday(r.timestamp)).toList();
     today.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     return today;
-  }
-
-  /// Resumen por tipo de líquido hoy
-  Map<LiquidType, int> get _todaySummaryByType {
-    final map = <LiquidType, int>{};
-    for (final r in _todayRecords) {
-      map[r.liquidType] = (map[r.liquidType] ?? 0) + r.amountMl;
-    }
-    return map;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Hidratación')),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Círculo de progreso
-                  _buildProgressCard(context),
-                  const SizedBox(height: 16),
-
-                  // Botones rápidos
-                  _buildQuickAddSection(context),
-                  const SizedBox(height: 20),
-
-                  // Resumen por tipo
-                  if (_todaySummaryByType.isNotEmpty) ...[
-                    Text(
-                      'Resumen por tipo',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    const SizedBox(height: 12),
-                    _buildTypeSummary(context),
-                    const SizedBox(height: 20),
-                  ],
-
-                  // Historial de hoy
-                  Text(
-                    'Historial de hoy',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: 12),
-                  if (_todayRecords.isEmpty)
-                    Card(
-                      margin: EdgeInsets.zero,
-                      child: Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Center(
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.water_drop_outlined,
-                                size: 48,
-                                color: Colors.grey.shade400,
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Aún no has registrado líquidos hoy',
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
-                  else
-                    ..._todayRecords.asMap().entries.map((entry) {
-                      return _buildRecordTile(context, entry.value, entry.key);
-                    }),
-                  const SizedBox(height: 80),
-                ],
-              ),
-            ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          final result = await showDialog<HydrationRecord>(
-            context: context,
-            builder: (_) => const AddHydrationDialog(),
-          );
-          if (result != null) {
-            await _addRecord(result);
-          }
-        },
-        icon: const Icon(Icons.add),
-        label: const Text('Registrar'),
-      ),
-    );
   }
 
   Widget _buildProgressCard(BuildContext context) {

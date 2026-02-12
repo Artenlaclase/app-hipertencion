@@ -7,6 +7,7 @@ class NutritionTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Código muerto eliminado
     return Scaffold(
       appBar: AppBar(title: const Text('Nutrición')),
       body: SingleChildScrollView(

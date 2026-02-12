@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
+import 'home_screen.dart';
 
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key});
@@ -33,7 +34,12 @@ class HomeTab extends StatelessWidget {
               title: 'Presión Arterial',
               subtitle: 'Sin medición hoy',
               actionText: 'Registrar',
-              onTap: () {},
+              onTap: () {
+                // Cambia a la pestaña de Presión Arterial (index 1)
+                final homeScreenState = context
+                    .findAncestorStateOfType<HomeScreenState>();
+                homeScreenState?.changeTab(1);
+              },
             ),
             const SizedBox(height: 12),
 
@@ -45,7 +51,12 @@ class HomeTab extends StatelessWidget {
               title: 'Medicamentos',
               subtitle: 'Controla tus dosis',
               actionText: 'Ver alertas',
-              onTap: () {},
+              onTap: () {
+                // Cambia a la pestaña de Medicamentos (index 2)
+                final homeScreenState = context
+                    .findAncestorStateOfType<HomeScreenState>();
+                homeScreenState?.changeTab(2);
+              },
             ),
             const SizedBox(height: 12),
 
@@ -57,7 +68,12 @@ class HomeTab extends StatelessWidget {
               title: 'Hidratación',
               subtitle: 'Registra tu consumo de líquidos',
               actionText: 'Registrar',
-              onTap: () {},
+              onTap: () {
+                // Cambia a la pestaña de Hidratación (index 3)
+                final homeScreenState = context
+                    .findAncestorStateOfType<HomeScreenState>();
+                homeScreenState?.changeTab(3);
+              },
             ),
             const SizedBox(height: 12),
 
@@ -69,7 +85,12 @@ class HomeTab extends StatelessWidget {
               title: 'Alimentación',
               subtitle: 'Sin registros hoy',
               actionText: 'Ver plan',
-              onTap: () {},
+              onTap: () {
+                // Cambia a la pestaña de Nutrición (index 4)
+                final homeScreenState = context
+                    .findAncestorStateOfType<HomeScreenState>();
+                homeScreenState?.changeTab(4);
+              },
             ),
             const SizedBox(height: 12),
 
@@ -81,7 +102,12 @@ class HomeTab extends StatelessWidget {
               title: 'Hábitos',
               subtitle: '0 de 0 completados',
               actionText: 'Ver hábitos',
-              onTap: () {},
+              onTap: () {
+                // Cambia a la pestaña de Hábitos (index 6)
+                final homeScreenState = context
+                    .findAncestorStateOfType<HomeScreenState>();
+                homeScreenState?.changeTab(6);
+              },
             ),
             const SizedBox(height: 24),
 

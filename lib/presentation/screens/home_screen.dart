@@ -11,13 +11,19 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeScreen> createState() => HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
+class HomeScreenState extends State<HomeScreen> {
+  void changeTab(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
 
-  final List<Widget> _tabs = const [
+  int currentIndex = 0;
+
+  final List<Widget> _tabs = [
     HomeTab(),
     BloodPressureTab(),
     MedicationTab(),
@@ -30,10 +36,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _tabs[_currentIndex],
+      body: _tabs[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
+        currentIndex: currentIndex,
+        onTap: (index) => changeTab(index),
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
