@@ -90,7 +90,9 @@ class SettingsScreen extends StatelessWidget {
                 await prefs.clear();
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Datos eliminados correctamente.')),
+                    const SnackBar(
+                      content: Text('Datos eliminados correctamente.'),
+                    ),
                   );
                 }
               }
